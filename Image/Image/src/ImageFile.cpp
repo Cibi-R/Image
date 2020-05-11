@@ -21,3 +21,21 @@ void ImageProcess::ImageFile::ImageFile_Read(char* data, int size)
 {
 	File.read(data, size);
 }
+
+void ImageProcess::ImageFile::ImageFile_Open(std::string image_name)
+{
+	if (File.is_open())
+	{
+		File.close();
+	}
+
+	File.open(image_name, std::ios::binary);
+}
+
+void ImageProcess::ImageFile::ImageFile_Close(void)
+{
+	if (File.is_open())
+	{
+		File.close();
+	}
+}

@@ -30,34 +30,35 @@ void ImageProcess::Image::Image_Init(void)
 		/* m_ColorTable Initial Value is 0 */
 	}
 
-	Image_Data = new char[Image_Width * Image_Height];
+	Image_Data = new char[Image_Width * Image_Height * (Image_ColorDepth / 8)];
 
-	ImageFile_Read(Image_Data, (Image_Width * Image_Height));
+	ImageFile_Read(Image_Data, (Image_Width * Image_Height * (Image_ColorDepth / 8)));
 }
 
-unsigned char ImageProcess::Image::Image_MakeCopy(std::string imagename)
+void ImageProcess::Image::Image_ClearData(void)
 {
-	std::ofstream ImageOut(imagename,std::ios::binary);
+	Image_Width = 0;
+	Image_Height = 0;
+	Image_ColorDepth = 0;
 
-	ImageOut.write(Image_Header, 54);
-	
-	if (8 <= Image_ColorDepth)
-	{
-		ImageOut.write(Image_ColorTable, 1024);
-	}
+	memset(Image_ColorTable, 0, 1024);
 
-	ImageOut.write(Image_Data, (Image_Width * Image_Height));
-	ImageOut.close();
-
-	std::cout << Image_Height << "-" << Image_Width << "-" << Image_ColorDepth << "-" << Is_ImageFile_Open() << std::endl;
-
-	return 1;
+	delete Image_Data;
 }
 
-std::ostream& ImageProcess::operator<<(std::ostream& out, ImageProcess::Image &MyImage)
+
+void ImageProcess::Image::Image_OpenImage(std::string image_name)
 {
-	out << "Image Name : " << MyImage.Image_Name << " Image Width : " << MyImage.Image_Width <<
-		" Image Height : " << MyImage.Image_Height << " Image Color Depth : " << MyImage.Image_ColorDepth;
+	Image_Name = image_name;
+	ImageFile_Open(image_name);
+	Image_ClearData();
+	Image_Init();
+}
+
+std::ostream& ImageProcess::operator<<(std::ostream& out, ImageProcess::Image &my_image)
+{
+	out << "Image Name : " << my_image.Image_Name << " -- Image Width : " << my_image.Image_Width <<
+		" -- Image Height : " << my_image.Image_Height << " -- Image Color Depth : " << my_image.Image_ColorDepth;
 
 	return out;
 }

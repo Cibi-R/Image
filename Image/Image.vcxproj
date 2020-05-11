@@ -138,16 +138,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Image\src\ImageData.cpp" />
+    <ClCompile Include="Image\src\ImageComputation.cpp" />
     <ClCompile Include="Image\src\ImageFile.cpp" />
     <ClCompile Include="src.cpp" />
     <ClCompile Include="Image\src\Image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image\api\Image.hpp" />
-    <ClInclude Include="Image\api\ImageData.hpp" />
+    <ClInclude Include="Image\api\ImageComputation.hpp" />
     <ClInclude Include="Image\api\ImageFile.hpp" />
-    <ClInclude Include="Image\api\ImageConfig.h" />
+    <ClInclude Include="Image\api\ImageConfig.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

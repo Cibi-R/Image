@@ -24,7 +24,7 @@
     <ClCompile Include="Image\src\ImageFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Image\src\ImageData.cpp">
+    <ClCompile Include="Image\src\ImageComputation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,10 +35,10 @@
     <ClInclude Include="Image\api\ImageFile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Image\api\ImageConfig.h">
+    <ClInclude Include="Image\api\ImageComputation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Image\api\ImageData.hpp">
+    <ClInclude Include="Image\api\ImageConfig.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
