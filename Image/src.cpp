@@ -13,5 +13,7 @@ int main(void)
 	ImageProcess::ImageComputation::MakeClone(MyImage);
 	std::cout << MyImage << std::endl;*/
 
-	ImageProcess::ImageComputation::MedianAvg(MyImage);
+	ImageProcess::ImageComputation::SmoothImage(MyImage,"1.bmp",ImageProcess::AVERAGE_SMOOTHING);
+
+	ImageProcess::ImageComputation::SmoothImage(MyImage,"2.bmp", ImageProcess::MEDIAN_SMOOTHING);
 }

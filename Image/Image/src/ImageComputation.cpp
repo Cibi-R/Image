@@ -76,9 +76,12 @@ static void IC_Average_Median(unsigned char* Dat, unsigned char* ResData, int Ro
 	}
 }
 
-static void IC_Average_Smooth(unsigned char* Dat, unsigned char* ResData, int Row, int Col)
+static void IC_SmoothImage(unsigned char* Data, unsigned char* ResData, int Row, int Col, ImageProcess::Image_Smoothing_E type)
 {
+	int8_t Index = 0;
 	int8_t Seq[3] = { -1,0,1 };
+
+	unsigned char PixelVal[9];
 
 	int R, C, Sum = 0;
 
@@ -113,12 +116,50 @@ static void IC_Average_Smooth(unsigned char* Dat, unsigned char* ResData, int Ro
 						C = j;
 					}
 
-					Sum += (*(Dat + C + R * Col));
+					switch (type)
+					{
+						case ImageProcess::AVERAGE_SMOOTHING:
+						{
+							Sum += (*(Data + C + R * Col));
+							break;
+						}
+
+						case ImageProcess::MEDIAN_SMOOTHING:
+						{
+							PixelVal[Index] = (*(Data + C + R * Col));
+							Index++;
+							break;
+						}
+
+						default:
+						{
+							//TO DO : Implement appropriate logic to end the smoothing process
+						}
+					}
 				}
 			}
 
-			(*(ResData + (i * Col) + j)) = (Sum / 9);
-			Sum = 0;
+			switch (type)
+			{
+				case ImageProcess::AVERAGE_SMOOTHING:
+				{
+					(*(ResData + (i * Col) + j)) = (Sum / 9);
+					Sum = 0;
+					break;
+				}
+
+				case ImageProcess::MEDIAN_SMOOTHING:
+				{
+					(*(ResData + (i * Col) + j)) = MedianVal(PixelVal, 9);
+					Index = 0;
+					break;
+				}
+
+				default:
+				{
+					// Do Nothing
+				}
+			}
 		}
 	}
 }
@@ -145,33 +186,18 @@ static bool IC_MakeCopy(std::string ImgName, const char* Header, const char* Col
 
 bool ImageProcess::ImageComputation::MakeClone(ImageProcess::Image& Img)
 {
-	return IC_MakeCopy(("clone_" + Img.Image_Name), Img.Image_Header, Img.Image_ColorTable, Img.Image_Data, (Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)));
+	return IC_MakeCopy(("c_" + Img.Image_Name), Img.Image_Header, Img.Image_ColorTable, Img.Image_Data, (Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)));
 }
 
-bool ImageProcess::ImageComputation::SmoothAvg(ImageProcess::Image& Img)
+bool ImageProcess::ImageComputation::SmoothImage(ImageProcess::Image& Img, std::string ImgName, Image_Smoothing_E type)
 {
 	bool RetVal = false;
 
 	char* ProcessedImg = new char[Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)];
 
-	IC_Average_Smooth((unsigned char*)Img.Image_Data, (unsigned char*)ProcessedImg, Img.Image_Width, Img.Image_Height);
+	IC_SmoothImage((unsigned char*)Img.Image_Data, (unsigned char*)ProcessedImg, Img.Image_Width, Img.Image_Height, type);
 
-	RetVal = IC_MakeCopy(("as_" + Img.Image_Name), Img.Image_Header, Img.Image_ColorTable, ProcessedImg, (Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)));
-
-	delete ProcessedImg;
-
-	return RetVal;
-}
-
-bool ImageProcess::ImageComputation::MedianAvg(ImageProcess::Image& Img)
-{
-	bool RetVal = false;
-
-	char* ProcessedImg = new char[Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)];
-
-	IC_Average_Median((unsigned char*)Img.Image_Data, (unsigned char*)ProcessedImg, Img.Image_Width, Img.Image_Height);
-
-	RetVal = IC_MakeCopy(("ms_" + Img.Image_Name), Img.Image_Header, Img.Image_ColorTable, ProcessedImg, (Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)));
+	RetVal = IC_MakeCopy(ImgName, Img.Image_Header, Img.Image_ColorTable, ProcessedImg, (Img.Image_Width * Img.Image_Height * (Img.Image_ColorDepth / 8)));
 
 	delete ProcessedImg;
 

@@ -5,14 +5,19 @@
 
 namespace ImageProcess
 {
+	typedef enum Image_Smoothing_EN
+	{
+		AVERAGE_SMOOTHING,
+		MEDIAN_SMOOTHING
+	}Image_Smoothing_E;
+
 	class ImageComputation
 	{
 	private:
 		ImageComputation(void);
 	public:
 		static bool MakeClone(ImageProcess::Image& Img);
-		static bool SmoothAvg(ImageProcess::Image& Img);
-		static bool MedianAvg(ImageProcess::Image& Img);
+		static bool SmoothImage(ImageProcess::Image& Img, std::string ImgName, Image_Smoothing_E type);
 	};
 }
 
